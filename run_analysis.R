@@ -10,6 +10,7 @@ if (!dir.exists("UCI HAR Dataset")) {
         unzip("getdata-projectfiles-UCI HAR Dataset.zip")
 }
 
+
 # Load the train and the test sets
 activity_labels <- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
 activity_labels <- tolower(activity_labels)
@@ -23,6 +24,7 @@ subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt")
 X_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
 Y_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
 
+
 ## Merge the train and the test sets to create one data set
 subject_test <- mutate(subject_test, usage ="test")
 subject_train <- mutate(subject_train, usage ="test")
@@ -35,12 +37,14 @@ names(activities) <- c("subject", "usage", "activity", features)
 
 activities <- as_tibble(activities, .name_repair = "minimal")
 
+
 ## Extract only the measurements on the mean and standard deviation for each measurement
 activities <- activities %>%
         select(1:3, contains("mean"), contains("std")) %>%
         pivot_longer(cols = 4:89, names_to = "measurement", values_to = "value")
 
-# Convert "usage" and "activity" as factor
+
+## Convert "usage" and "activity" as factor
 activities$activity <- activity_labels[activities$activity]
 activities$activity <- factor(activities$activity, levels = activity_labels)
 
