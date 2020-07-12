@@ -26,3 +26,6 @@ names(activities) <- c("subject", "usage", "activity", features)
 activities <- as_tibble(activities, .name_repair = "minimal")
 
 ## Extracts only the measurements on the mean and standard deviation for each measurement
+activities <- activities %>%
+        select(1:3, contains("mean"), contains("std")) %>%
+        pivot_longer(cols = 4:89, names_to = "measurement", values_to = "value")
