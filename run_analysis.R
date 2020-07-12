@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyr)
 
 activity_labels <- read.table("./UCI HAR Dataset/activity_labels.txt")[,2]
+activity_labels <- tolower(activity_labels)
 features <- read.table("./UCI HAR Dataset/features.txt")[,2]
 
 subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt")
@@ -16,7 +17,6 @@ Y_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
 subject_test <- mutate(subject_test, usage ="test")
 subject_train <- mutate(subject_train, usage ="test")
 
-
 test <- bind_cols(subject_test, Y_test, X_test)
 train <- bind_cols(subject_train, Y_train, X_train)
 
@@ -29,3 +29,9 @@ activities <- as_tibble(activities, .name_repair = "minimal")
 activities <- activities %>%
         select(1:3, contains("mean"), contains("std")) %>%
         pivot_longer(cols = 4:89, names_to = "measurement", values_to = "value")
+
+# Converts "usage" and "activity" as factor
+activities$activity <- activity_labels[activities$activity]
+activities$activity <- factor(activities$activity, levels = activity_labels)
+
+activities$usage <- factor(activities$usage)
