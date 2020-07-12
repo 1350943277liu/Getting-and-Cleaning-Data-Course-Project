@@ -16,8 +16,12 @@ subject_test <- mutate(subject_test, usage ="test")
 subject_train <- mutate(subject_train, usage ="test")
 
 
-test <- cbind(subject_test, Y_test, X_test)
-train <- cbind(subject_train, Y_train, X_train)
+test <- bind_cols(subject_test, Y_test, X_test)
+train <- bind_cols(subject_train, Y_train, X_train)
 
-activities <- rbind(test, train)
+activities <- bind_rows(test, train)
 names(activities) <- c("subject", "usage", "activity", features)
+
+activities <- as_tibble(activities, .name_repair = "minimal")
+
+##
