@@ -12,6 +12,7 @@ subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt")
 X_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
 Y_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
 
+## Merges the training and the test sets to create one data set
 subject_test <- mutate(subject_test, usage ="test")
 subject_train <- mutate(subject_train, usage ="test")
 
@@ -24,4 +25,4 @@ names(activities) <- c("subject", "usage", "activity", features)
 
 activities <- as_tibble(activities, .name_repair = "minimal")
 
-##
+## Extracts only the measurements on the mean and standard deviation for each measurement
