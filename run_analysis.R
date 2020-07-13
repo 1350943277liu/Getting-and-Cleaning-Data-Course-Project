@@ -17,20 +17,22 @@ activity_labels <- tolower(activity_labels)
 features <- read.table("./UCI HAR Dataset/features.txt")[,2]
 
 subject_test <- read.table("./UCI HAR Dataset/test/subject_test.txt")
-X_test <- read.table("./UCI HAR Dataset/test/X_test.txt")
-Y_test <- read.table("./UCI HAR Dataset/test/Y_test.txt")
+label_test <- read.table("./UCI HAR Dataset/test/Y_test.txt")
+set_test <- read.table("./UCI HAR Dataset/test/X_test.txt")
+
 
 subject_train <- read.table("./UCI HAR Dataset/train/subject_train.txt")
-X_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
-Y_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
+label_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
+set_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
+
 
 
 ## Merge the train and the test sets to create one data set
 subject_test <- mutate(subject_test, usage ="test")
 subject_train <- mutate(subject_train, usage ="test")
 
-test <- bind_cols(subject_test, Y_test, X_test)
-train <- bind_cols(subject_train, Y_train, X_train)
+test <- bind_cols(subject_test, label_test, set_test)
+train <- bind_cols(subject_train, label_train, set_train)
 
 activities <- bind_rows(test, train)
 names(activities) <- c("subject", "usage", "activity", features)
@@ -40,8 +42,8 @@ activities <- as_tibble(activities, .name_repair = "minimal")
 
 ## Extract only the measurements on the mean and standard deviation for each measurement
 activities <- activities %>%
-        select(1:3, contains("mean"), contains("std")) %>%
-        pivot_longer(cols = 4:89, names_to = "measurement", values_to = "value")
+        select(1:3, contains("mean()"), contains("std()")) %>%
+        pivot_longer(cols = 4:69, names_to = "measurement", values_to = "value")
 
 
 ## Convert "usage" and "activity" as factor
@@ -49,3 +51,17 @@ activities$activity <- activity_labels[activities$activity]
 activities$activity <- factor(activities$activity, levels = activity_labels)
 
 activities$usage <- factor(activities$usage)
+
+
+##
+data.mean <- activities[grep("mean", activities$measurement),]
+data.mean <- mutate(data.mean, method="mean")       
+
+data.std <- activities[grep("std", activities$measurement),]
+data.std <- mutate(data.std, method="std") 
+
+activities <- bind_rows(data.mean, data.std)
+
+activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
+
+activities <- pivot_wider(activities, names_from = method, values_from = value, values_fn = mean)
