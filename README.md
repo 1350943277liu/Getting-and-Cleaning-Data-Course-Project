@@ -22,11 +22,31 @@ The experiments have been carried out with a group of 30 volunteers within an ag
 The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
 
 ## Files Available
+`Getting and Cleaning Data Course Project.Rproj`: r project file
 `run_analysis.r`: code used to get and clean data  
 `CodeBook`: description on variables, data and explanation of transformation performed to clean up the data  
 `Tidy_data.csv`: tidy data output of `run_analysis.r`  
 `UCI HAR Dataset/`: the raw dataset  
 `README.md`: brief introduction
 
+## Data Analysis
+Let's have a look at the tidy data first:
+``` r
+> activities
+# A tibble: 339,867 x 7
+   specifier subject usage activity measurement   mean    std
+       <int>   <int> <fct> <fct>    <chr>        <dbl>  <dbl>
+ 1         1       1 train walking  fBodyAcc-X  -0.261 -0.357
+ 2         2       1 train walking  fBodyAcc-X  -0.151 -0.262
+ 3         3       1 train walking  fBodyAcc-X  -0.230 -0.294
+ 4         4       1 train walking  fBodyAcc-X  -0.151 -0.263
+ 5         5       1 train walking  fBodyAcc-X  -0.226 -0.227
+ 6         6       1 train walking  fBodyAcc-X  -0.290 -0.200
+ 7         7       1 train walking  fBodyAcc-X  -0.164 -0.263
+ 8         8       1 train walking  fBodyAcc-X  -0.188 -0.272
+ 9         9       1 train walking  fBodyAcc-X  -0.275 -0.387
+10        10       1 train walking  fBodyAcc-X  -0.236 -0.274
+# … with 339,857 more rows
+```
 
 
