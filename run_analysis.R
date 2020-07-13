@@ -46,14 +46,14 @@ activities <- activities %>%
         pivot_longer(cols = 4:69, names_to = "measurement", values_to = "value")
 
 
-## Convert "usage" and "activity" as factor
+## Convert "usage" and "activity" into factors
 activities$activity <- activity_labels[activities$activity]
 activities$activity <- factor(activities$activity, levels = activity_labels)
 
 activities$usage <- factor(activities$usage)
 
 
-##
+## furthr treatment of separating statistical index "mean" and "std" out of measurement
 data.mean <- activities[grep("mean", activities$measurement),]
 data.mean <- mutate(data.mean, method="mean")       
 
