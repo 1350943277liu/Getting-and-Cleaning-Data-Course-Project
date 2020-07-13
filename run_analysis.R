@@ -70,4 +70,7 @@ activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
 activities <- pivot_wider(activities, names_from = method) %>%
         arrange(subject, activity, measurement)
 
+activities$measurement <- factor(activities$measurement)
 
+## output result
+write.csv(activities, "Tidy_data.csv")
