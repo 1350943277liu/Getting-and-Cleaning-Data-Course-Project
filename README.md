@@ -29,6 +29,7 @@ The sensor signals (accelerometer and gyroscope) were pre-processed by applying 
 `CodeBook`: description on variables, data and explanation of transformation performed to clean up the data  
 `Tidy_data.csv`: tidy data output of `run_analysis.r`  
 `UCI HAR Dataset/`: the raw dataset  
+`README.md`: brief introduction
 
 
 
