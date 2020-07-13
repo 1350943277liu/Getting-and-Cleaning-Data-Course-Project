@@ -3,13 +3,10 @@ Getting-and-Cleaning-Data-Course-Project
 
 ## Introduction
 
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
+This is the peer-graded course project of ["Getting and Cleaning Data"](https://www.coursera.org/learn/data-cleaning?specialization=data-science-foundations-r) on [Coursera](https://www.coursera.org/)
 
 ## Included Packages
 
-You can include R code in the document as follows:
 
 ``` r
 library(dplyr)
