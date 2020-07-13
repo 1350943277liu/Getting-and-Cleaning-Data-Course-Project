@@ -29,13 +29,13 @@ The sensor signals (accelerometer and gyroscope) were pre-processed by applying 
 `UCI HAR Dataset/`: the raw dataset  
 `README.md`: brief introduction
 
-## Data Analysis
+## Analysis Result
 Let's have a look at the tidy data first:
 ``` r
 > activities
 # A tibble: 339,867 x 7
    specifier subject usage activity measurement   mean    std
-       <int>   <int> <fct> <fct>    <chr>        <dbl>  <dbl>
+       <int>   <int> <fct> <fct>    <fct>        <dbl>  <dbl>
  1         1       1 train walking  fBodyAcc-X  -0.261 -0.357
  2         2       1 train walking  fBodyAcc-X  -0.151 -0.262
  3         3       1 train walking  fBodyAcc-X  -0.230 -0.294
@@ -48,5 +48,10 @@ Let's have a look at the tidy data first:
 10        10       1 train walking  fBodyAcc-X  -0.236 -0.274
 # … with 339,857 more rows
 ```
+It satisfies [Hadley Wickham's principles on tidy data](http://vita.had.co.nz/papers/tidy-data.pdf) below, so it is tidy.
 
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.
 
+For detailed information, please check `CodeBook.md` and `run_analysis.r`.
