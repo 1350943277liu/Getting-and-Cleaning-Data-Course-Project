@@ -237,8 +237,8 @@ activities <- bind_rows(data.mean, data.std)
 
 ### Pivot Wider
 
-Simplyfy the format of `measurement` in order to make `pivot_wider` work
-better. Reshape the structure, make mean/std become separated colunms
+Simplify the format of `measurement` in order to make `pivot_wider` work
+better. Reshape the structure, make mean/std become separated columns
 filled with corresponding value.
 
 ``` r
