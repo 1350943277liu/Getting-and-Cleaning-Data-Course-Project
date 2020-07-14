@@ -33,13 +33,13 @@ summary(activities) #tidy version
 
 <tr><td valign=top>`./UCI HAR Dataset/test/X_test.txt`</td><td> sensor data of test group </td></tr>
 
-<tr><td valign=top>`./UCI HAR Dataset/test/y_test.txt`</td><td> activity label for each observation </td></tr>
+<tr><td valign=top>`./UCI HAR Dataset/test/y_test.txt`</td><td> activity label for each test observation </td></tr>
 
 <tr><td valign=top>`./UCI HAR Dataset/train/subject_train.txt`</td><td> subject included in train group </td></tr>
 
 <tr><td valign=top>`./UCI HAR Dataset/train/X_train.txt`</td><td> sensor data of train group </td></tr>
 
-<tr><td valign=top>`./UCI HAR Dataset/train/y_train.txt`</td><td> activity label for each observation </td></tr>
+<tr><td valign=top>`./UCI HAR Dataset/train/y_train.txt`</td><td> activity label for each train observation </td></tr>
 
 
 

@@ -121,7 +121,7 @@ sensor data of test group
 
 <td>
 
-activity label for each observation
+activity label for each test observation
 
 </td>
 
@@ -169,7 +169,7 @@ sensor data of train group
 
 <td>
 
-activity label for each observation
+activity label for each train observation
 
 </td>
 
