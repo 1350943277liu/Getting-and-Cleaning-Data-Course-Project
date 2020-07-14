@@ -42,7 +42,7 @@ activities <- as_tibble(activities, .name_repair = "minimal")
 
 ## Extract only the measurements on the mean and standard deviation for each measurement
 activities <- activities %>%
-        select(1:3, contains("mean()"), contains("std()")) %>%
+        select(1:3, contains("mean()") | contains("std()")) %>%
         arrange(subject, activity)
 
 activities <- bind_cols(specifier = 1:nrow(activities), activities) %>%

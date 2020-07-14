@@ -41,7 +41,7 @@ calculating variables from the time and frequency domain.
 transformation performed to clean up the data  
 `Tidy_data.csv`: tidy data output of `run_analysis.r`  
 `UCI HAR Dataset/`: the raw dataset  
-`README.md`: brief introduction
+`README.md`
 
 ## Analysis Procedure
 
@@ -94,6 +94,9 @@ set_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
 
 ### Merge Dataset
 
+Combine variables containing subject, activity and measurement data into
+`activities`
+
 ``` r
 ## Merge the train and the test sets to create one data set
 subject_test <- mutate(subject_test, usage ="test")
@@ -125,20 +128,31 @@ activities <- as_tibble(activities, .name_repair = "minimal")
 
 ### Extract Only The Mean and Std Subset
 
+Use `select()` for mean/std data screening
+
 ``` r
 activities <- activities %>%
-        select(1:3, contains("mean()"), contains("std()")) %>%
+        select(1:3, contains("mean()") | contains("std()")) %>%
         arrange(subject, activity)
 ```
 
 ### Add Specifier to Pivot
+
+For each subject, the same activity is measured more than once, which
+makes subject id is not a unique observation specifier(or the
+`pivot_longer()` and `pivot_wider()` cannot match each observation’s
+subject, mean and std correctly) for further cleaning, I add a specifier
+column manually.
+
+In addtion, `pivot_longer()` and `pivot_wider()` are more developed
+version of outdated `gather()` and `spread()`.
 
 ``` r
 activities <- bind_cols(specifier = 1:nrow(activities), activities) %>%
         pivot_longer(cols = 5:70, names_to = "measurement", values_to = "value") 
 ```
 
-### Replace `activities$activity` From Numbers to Character
+### Replace `activities$activity` from Numbers to Characters
 
 ``` r
 activities$activity <- activity_labels[activities$activity]
@@ -148,6 +162,10 @@ activities$usage <- factor(activities$usage)
 ```
 
 ### Further Manipulation
+
+Add a column to store what statistical method is used in `measurement`
+column, which will be the “names\_from” parameters in next part’
+`pivot_wider()` function.
 
 ``` r
 data.mean <- activities[grep("mean", activities$measurement),] %>%
@@ -160,6 +178,10 @@ activities <- bind_rows(data.mean, data.std)
 ```
 
 ### Pivot Wider
+
+Simplyfy the format of `measurement` in order to make `pivot_wider` work
+better. Reshape the structure, make mean/std become separated colunms
+filled with corresponding value.
 
 ``` r
 activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
