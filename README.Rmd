@@ -128,7 +128,7 @@ activities$usage <- factor(activities$usage)
 
 ### Further Manipulation
 
-Add a column to store what statistical method is used in `measurement` column, which will be the "names_from" parameters in next part' `pivot_wider()` function.
+Add a column to store what statistical method is used in `measurement` column, which will be the "names_from" parameters in next part's `pivot_wider()` function.
 ```{r}
 data.mean <- activities[grep("mean", activities$measurement),] %>%
         mutate(method="mean")       

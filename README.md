@@ -222,7 +222,7 @@ activities$usage <- factor(activities$usage)
 ### Further Manipulation
 
 Add a column to store what statistical method is used in `measurement`
-column, which will be the “names\_from” parameters in next part’
+column, which will be the “names\_from” parameters in next part’s
 `pivot_wider()` function.
 
 ``` r
