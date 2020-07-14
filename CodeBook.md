@@ -57,7 +57,7 @@ Description
 
 <td>
 
-Vavriable storing the whole data
+acitivity labels
 
 </td>
 
@@ -73,8 +73,7 @@ Vavriable storing the whole data
 
 <td>
 
-Variable storing activity labels in `./UCI HAR
-Dataset/activity_labels.txt`
+sensor signal label
 
 </td>
 
@@ -90,7 +89,7 @@ Dataset/activity_labels.txt`
 
 <td>
 
-intervening variable storing mean values of all observations
+subject included in test group
 
 </td>
 
@@ -106,8 +105,7 @@ intervening variable storing mean values of all observations
 
 <td>
 
-intervening variable storing standard deviation values of all
-observations
+sensor data of test group
 
 </td>
 
@@ -123,7 +121,7 @@ observations
 
 <td>
 
-variable storing data of `./UCI HAR Dataset/features.txt`
+activity label for each observation
 
 </td>
 
@@ -139,8 +137,7 @@ variable storing data of `./UCI HAR Dataset/features.txt`
 
 <td>
 
-variable storing activity labels of test subject in `./UCI HAR
-Dataset/test/y_test.txt`
+subject included in train group
 
 </td>
 
@@ -156,8 +153,7 @@ Dataset/test/y_test.txt`
 
 <td>
 
-variable storing activity labels of test subject in `./UCI HAR
-Dataset/test/y_test.txt`
+sensor data of train group
 
 </td>
 
@@ -173,8 +169,7 @@ Dataset/test/y_test.txt`
 
 <td>
 
-variable storing activity labels of test subject in `./UCI HAR
-Dataset/test/y_test.txt`
+activity label for each observation
 
 </td>
 
