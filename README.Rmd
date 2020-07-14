@@ -100,6 +100,12 @@ activities <- activities %>%
         select(1:3, contains("mean()") | contains("std()")) %>%
         arrange(subject, activity)
 ```
+There are variables:subject, usage, activity label, mean and standard deviation.
+
+According to Hadley Wickham' principle for tidy and messy data, it is not difficult to find that some values(features) are part of column headers as well as multiple variables(measurement, mean and std) are stored in the same column as shown below.
+```{r}
+activities
+```
 
 ### Add Specifier to Pivot
 
