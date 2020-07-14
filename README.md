@@ -255,3 +255,26 @@ activities$measurement <- factor(activities$measurement)
 ``` r
 write.csv(activities, "Tidy_data.csv")
 ```
+
+## Result Analysis
+
+it satisfies Hadley’s principles, thus it’s tidy.
+
+``` r
+activities
+```
+
+    ## # A tibble: 339,867 x 7
+    ##    specifier subject usage activity measurement   mean    std
+    ##        <int>   <int> <fct> <fct>    <fct>        <dbl>  <dbl>
+    ##  1         1       1 train walking  fBodyAcc-X  -0.261 -0.357
+    ##  2         2       1 train walking  fBodyAcc-X  -0.151 -0.262
+    ##  3         3       1 train walking  fBodyAcc-X  -0.230 -0.294
+    ##  4         4       1 train walking  fBodyAcc-X  -0.151 -0.263
+    ##  5         5       1 train walking  fBodyAcc-X  -0.226 -0.227
+    ##  6         6       1 train walking  fBodyAcc-X  -0.290 -0.200
+    ##  7         7       1 train walking  fBodyAcc-X  -0.164 -0.263
+    ##  8         8       1 train walking  fBodyAcc-X  -0.188 -0.272
+    ##  9         9       1 train walking  fBodyAcc-X  -0.275 -0.387
+    ## 10        10       1 train walking  fBodyAcc-X  -0.236 -0.274
+    ## # … with 339,857 more rows

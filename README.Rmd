@@ -159,3 +159,9 @@ activities$measurement <- factor(activities$measurement)
 write.csv(activities, "Tidy_data.csv")
 ```
 
+## Result Analysis
+it satisfies Hadley's principles, thus it's tidy.
+```{r}
+activities
+```
+
