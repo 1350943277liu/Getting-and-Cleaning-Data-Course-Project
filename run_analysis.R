@@ -56,7 +56,7 @@ activities$activity <- factor(activities$activity, levels = activity_labels)
 activities$usage <- factor(activities$usage)
 
 
-## furthr treatment of separating statistical index "mean" and "std" out of measurement
+## further treatment of separating statistical index "mean" and "std" out of measurement
 data.mean <- activities[grep("mean", activities$measurement),] %>%
         mutate(method="mean")       
 
@@ -66,6 +66,7 @@ data.std <- activities[grep("std", activities$measurement),] %>%
 activities <- bind_rows(data.mean, data.std)
 
 activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
+activities$activity <- sub("_", " ", activities$activity)
 
 activities <- pivot_wider(activities, names_from = method) %>%
         arrange(subject, activity, measurement)
