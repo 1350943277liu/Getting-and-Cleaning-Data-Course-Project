@@ -92,7 +92,7 @@ label_train <- read.table("./UCI HAR Dataset/train/Y_train.txt")
 set_train <- read.table("./UCI HAR Dataset/train/X_train.txt")
 ```
 
-### Merge Dataset
+### (Step 1) Merge the train and the test sets to create one data set
 
 Combine variables containing subject, activity and measurement data into
 `activities`
@@ -126,7 +126,7 @@ names(activities) <- c("subject", "usage", "activity", features)
 activities <- as_tibble(activities, .name_repair = "minimal")
 ```
 
-### Extract Only The Mean and Std Subset
+### (Step 2) Extract only the measurements on the mean and standard deviation
 
 Use `select()` for mean/std data screening
 
@@ -194,7 +194,7 @@ activities
     ## #   `fBodyAccMag-std()` <dbl>, `fBodyBodyAccJerkMag-std()` <dbl>,
     ## #   `fBodyBodyGyroMag-std()` <dbl>, `fBodyBodyGyroJerkMag-std()` <dbl>
 
-### Add Specifier to Pivot
+#### Add Specifier to Pivot
 
 For each subject, the same activity is measured more than once, which
 makes subject id is not a unique observation specifier(or the
@@ -203,23 +203,26 @@ subject, mean and std correctly) for further cleaning, I add a specifier
 column manually.
 
 In addtion, `pivot_longer()` and `pivot_wider()` are more developed
-version of outdated `gather()` and `spread()`.
+versions of outdated `gather()` and `spread()`. And it’s doable to
+directly get the aimed average mean and std by pass parameter `values_fn
+= mean` to `pivot_wider()` in the following step without adding a
+specifier. I decided not to do that, because I want to get a tidy
+dataset containing completed data which can be used to run cluster
+analysis or plotting and calculate the average mean and std from it.
 
 ``` r
 activities <- bind_cols(specifier = 1:nrow(activities), activities) %>%
         pivot_longer(cols = 5:70, names_to = "measurement", values_to = "value") 
 ```
 
-### Replace `activities$activity` from Numbers to Characters
+### (Step 3 & 4)further treatment of separating statistical index “mean” and “std” out of measurement
 
 ``` r
 activities$activity <- activity_labels[activities$activity]
-activities$activity <- factor(activities$activity, levels = activity_labels)
-
-activities$usage <- factor(activities$usage)
+activities$activity <- sub("_", " ", activities$activity)
 ```
 
-### Further Manipulation
+#### Further Manipulation
 
 Add a column to store what statistical method is used in `measurement`
 column, which will be the “names\_from” parameters in next part’s
@@ -235,7 +238,7 @@ data.std <- activities[grep("std", activities$measurement),] %>%
 activities <- bind_rows(data.mean, data.std)
 ```
 
-### Pivot Wider
+#### Pivot Wider
 
 Simplify the format of `measurement` in order to make `pivot_wider` work
 better. Reshape the structure, make mean/std become separated columns
@@ -247,26 +250,12 @@ activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
 activities <- pivot_wider(activities, names_from = method) %>%
         arrange(subject, activity, measurement)
 
-activities$measurement <- factor(activities$measurement)
-```
-
-### Output Result
-
-``` r
-write.csv(activities, "Tidy_data.csv")
-```
-
-## Result Analysis
-
-it satisfies Hadley’s principles, thus it’s tidy.
-
-``` r
 activities
 ```
 
     ## # A tibble: 339,867 x 7
     ##    specifier subject usage activity measurement   mean    std
-    ##        <int>   <int> <fct> <fct>    <fct>        <dbl>  <dbl>
+    ##        <int>   <int> <fct> <fct>    <chr>        <dbl>  <dbl>
     ##  1         1       1 train walking  fBodyAcc-X  -0.261 -0.357
     ##  2         2       1 train walking  fBodyAcc-X  -0.151 -0.262
     ##  3         3       1 train walking  fBodyAcc-X  -0.230 -0.294
@@ -278,3 +267,87 @@ activities
     ##  9         9       1 train walking  fBodyAcc-X  -0.275 -0.387
     ## 10        10       1 train walking  fBodyAcc-X  -0.236 -0.274
     ## # … with 339,857 more rows
+
+### (Step 5) Calculate the average of mean and std for each subject, activity and measurement into a second independent dataset
+
+``` r
+activities_average <- activities %>%
+        group_by(subject, activity, measurement) %>%
+        summarise(average_mean = mean(mean), average_std = mean(std))
+```
+
+    ## `summarise()` regrouping output by 'subject', 'activity' (override with `.groups` argument)
+
+``` r
+activities_average
+```
+
+    ## # A tibble: 5,940 x 5
+    ## # Groups:   subject, activity [180]
+    ##    subject activity measurement          average_mean average_std
+    ##      <int> <fct>    <chr>                       <dbl>       <dbl>
+    ##  1       1 walking  fBodyAcc-X                -0.203      -0.319 
+    ##  2       1 walking  fBodyAcc-Y                 0.0897      0.0560
+    ##  3       1 walking  fBodyAcc-Z                -0.332      -0.280 
+    ##  4       1 walking  fBodyAccJerk-X            -0.171      -0.134 
+    ##  5       1 walking  fBodyAccJerk-Y            -0.0352      0.107 
+    ##  6       1 walking  fBodyAccJerk-Z            -0.469      -0.535 
+    ##  7       1 walking  fBodyAccMag               -0.129      -0.398 
+    ##  8       1 walking  fBodyBodyAccJerkMag       -0.0571     -0.103 
+    ##  9       1 walking  fBodyBodyGyroJerkMag      -0.319      -0.382 
+    ## 10       1 walking  fBodyBodyGyroMag          -0.199      -0.321 
+    ## # … with 5,930 more rows
+
+### Output Result
+
+``` r
+write.csv(activities_average, "Tidy_data.csv")
+```
+
+## Result Analysis
+
+Both `acitivities` and `activities_average` satisfie Hadley’s
+principles, thus it’s tidy. In addition, as [Getting and Cleaning the
+Assignment](https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/)
+mentioned, it’s hard to correctly decompose strings like “fBodyAcc-X” or
+“fBodyBodyAccJerkMag”, so I think it is enough to leave them as they are
+in `activities` and `activities_average`.
+
+``` r
+activities
+```
+
+    ## # A tibble: 339,867 x 7
+    ##    specifier subject usage activity measurement   mean    std
+    ##        <int>   <int> <fct> <fct>    <chr>        <dbl>  <dbl>
+    ##  1         1       1 train walking  fBodyAcc-X  -0.261 -0.357
+    ##  2         2       1 train walking  fBodyAcc-X  -0.151 -0.262
+    ##  3         3       1 train walking  fBodyAcc-X  -0.230 -0.294
+    ##  4         4       1 train walking  fBodyAcc-X  -0.151 -0.263
+    ##  5         5       1 train walking  fBodyAcc-X  -0.226 -0.227
+    ##  6         6       1 train walking  fBodyAcc-X  -0.290 -0.200
+    ##  7         7       1 train walking  fBodyAcc-X  -0.164 -0.263
+    ##  8         8       1 train walking  fBodyAcc-X  -0.188 -0.272
+    ##  9         9       1 train walking  fBodyAcc-X  -0.275 -0.387
+    ## 10        10       1 train walking  fBodyAcc-X  -0.236 -0.274
+    ## # … with 339,857 more rows
+
+``` r
+activities_average
+```
+
+    ## # A tibble: 5,940 x 5
+    ## # Groups:   subject, activity [180]
+    ##    subject activity measurement          average_mean average_std
+    ##      <int> <fct>    <chr>                       <dbl>       <dbl>
+    ##  1       1 walking  fBodyAcc-X                -0.203      -0.319 
+    ##  2       1 walking  fBodyAcc-Y                 0.0897      0.0560
+    ##  3       1 walking  fBodyAcc-Z                -0.332      -0.280 
+    ##  4       1 walking  fBodyAccJerk-X            -0.171      -0.134 
+    ##  5       1 walking  fBodyAccJerk-Y            -0.0352      0.107 
+    ##  6       1 walking  fBodyAccJerk-Z            -0.469      -0.535 
+    ##  7       1 walking  fBodyAccMag               -0.129      -0.398 
+    ##  8       1 walking  fBodyBodyAccJerkMag       -0.0571     -0.103 
+    ##  9       1 walking  fBodyBodyGyroJerkMag      -0.319      -0.382 
+    ## 10       1 walking  fBodyBodyGyroMag          -0.199      -0.321 
+    ## # … with 5,930 more rows

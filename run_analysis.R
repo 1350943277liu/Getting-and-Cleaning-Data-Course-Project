@@ -53,17 +53,15 @@ activities <- bind_cols(specifier = seq_len(nrow(activities)), activities) %>%
 
 
 ## (Step 3 & 4)further treatment of separating statistical index "mean" and "std" out of measurement
-data.mean <- activities[grep("mean", activities$measurement),] %>%
-        mutate(method="mean")       
-
-data.std <- activities[grep("std", activities$measurement),] %>%
-        mutate(method="std") 
-
-activities <- bind_rows(data.mean, data.std)
-
 
 activities$activity <- activity_labels[activities$activity]
 activities$activity <- sub("_", " ", activities$activity)
+
+data.mean <- activities[grep("mean", activities$measurement),] %>%
+        mutate(method="mean")       
+data.std <- activities[grep("std", activities$measurement),] %>%
+        mutate(method="std") 
+activities <- bind_rows(data.mean, data.std)
 
 activities$measurement <- sub("-(mean|std)[(][)]", "", activities$measurement)
 
@@ -76,7 +74,6 @@ activities <- pivot_wider(activities, names_from = method) %>%
 activities_average <- activities %>%
         group_by(subject, activity, measurement) %>%
         summarise(average_mean = mean(mean), average_std = mean(std))
-
 
 
 ## output result
